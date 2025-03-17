@@ -12,7 +12,7 @@ const app= express();
 
 //Middelware to handle cors
 app.use(cors({
-    origin:process.env.CLIENT_URL || "*",
+    origin:"https://financial-tracker-frontend-five.vercel.app" || "*",
     methods:["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 })
