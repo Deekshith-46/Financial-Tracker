@@ -57,6 +57,44 @@ exports.deleteExpense = async (req, res) => {
 }
 
 //Download Excel
+// exports.downloadExpenseExcel = async (req, res) => {
+//     const userId = req.user.id; // Get user ID from request
+
+//     try {
+//         // Fetch expense records for the user, sorted by date (newest first)
+//         const expense = await Expense.find({ userId }).sort({ date: -1 });
+
+//         // Prepare data for Excel
+//         const data = expense.map((item) => ({
+//             category: item.category,
+//             Amount: item.amount,
+//             Date: item.date, // Format date as YYYY-MM-DD
+//         }));
+
+//         // Create a new Excel workbook and worksheet
+//         const wb = xlsx.utils.book_new();
+//         const ws = xlsx.utils.json_to_sheet(data);
+//         xlsx.utils.book_append_sheet(wb, ws, "Expense");
+
+//         // Define the file path
+//         const filePath = "Expense_details.xlsx";
+
+//         // Write the Excel file
+//         xlsx.writeFile(wb, filePath);
+
+//         // Send the file as a response
+//         res.download(filePath, "Expense_details.xlsx", (err) => {
+//             if (err) {
+//                 console.error("File download error:", err);
+//                 res.status(500).json({ message: "Error downloading file" });
+//             }
+//         });
+//     } catch (error) {
+//         console.error("Server error:", error);
+//         res.status(500).json({ message: "Server Error", error: error.message });
+//     }
+// }
+
 exports.downloadExpenseExcel = async (req, res) => {
     const userId = req.user.id; // Get user ID from request
 
@@ -66,9 +104,9 @@ exports.downloadExpenseExcel = async (req, res) => {
 
         // Prepare data for Excel
         const data = expense.map((item) => ({
-            category: item.category,
+            Category: item.category,
             Amount: item.amount,
-            Date: item.date, // Format date as YYYY-MM-DD
+            Date: item.date.toISOString().split("T")[0], // Format date as YYYY-MM-DD
         }));
 
         // Create a new Excel workbook and worksheet
@@ -76,21 +114,17 @@ exports.downloadExpenseExcel = async (req, res) => {
         const ws = xlsx.utils.json_to_sheet(data);
         xlsx.utils.book_append_sheet(wb, ws, "Expense");
 
-        // Define the file path
-        const filePath = "Expense_details.xlsx";
+        // Convert workbook to buffer (NO FILE WRITING)
+        const excelBuffer = xlsx.write(wb, { bookType: "xlsx", type: "buffer" });
 
-        // Write the Excel file
-        xlsx.writeFile(wb, filePath);
+        // Set response headers for file download
+        res.setHeader("Content-Disposition", "attachment; filename=expense_details.xlsx");
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        // Send the file as a response
-        res.download(filePath, "Expense_details.xlsx", (err) => {
-            if (err) {
-                console.error("File download error:", err);
-                res.status(500).json({ message: "Error downloading file" });
-            }
-        });
+        // Send buffer as response
+        res.send(excelBuffer);
     } catch (error) {
         console.error("Server error:", error);
         res.status(500).json({ message: "Server Error", error: error.message });
     }
-}
+};

@@ -56,7 +56,44 @@ exports.deleteIncome = async (req, res) => {
     }
 }
 
-//Download Excel
+// //Download Excel
+// exports.downloadIncomeExcel = async (req, res) => {
+//     const userId = req.user.id; // Get user ID from request
+
+//     try {
+//         // Fetch income records for the user, sorted by date (newest first)
+//         const income = await Income.find({ userId }).sort({ date: -1 });
+
+//         // Prepare data for Excel
+//         const data = income.map((item) => ({
+//             Source: item.source,
+//             Amount: item.amount,
+//             Date: item.date, // Format date as YYYY-MM-DD
+//         }));
+
+//         // Create a new Excel workbook and worksheet
+//         const wb = xlsx.utils.book_new();
+//         const ws = xlsx.utils.json_to_sheet(data);
+//         xlsx.utils.book_append_sheet(wb, ws, "Income");
+
+//         // Define the file path
+//         const filePath = "income_details.xlsx";
+
+//         // Write the Excel file
+//         xlsx.writeFile(wb, filePath);
+
+//         // Send the file as a response
+//         res.download(filePath, "income_details.xlsx", (err) => {
+//             if (err) {
+//                 console.error("File download error:", err);
+//                 res.status(500).json({ message: "Error downloading file" });
+//             }
+//         });
+//     } catch (error) {
+//         console.error("Server error:", error);
+//         res.status(500).json({ message: "Server Error", error: error.message });
+//     }
+// }
 exports.downloadIncomeExcel = async (req, res) => {
     const userId = req.user.id; // Get user ID from request
 
@@ -68,7 +105,7 @@ exports.downloadIncomeExcel = async (req, res) => {
         const data = income.map((item) => ({
             Source: item.source,
             Amount: item.amount,
-            Date: item.date, // Format date as YYYY-MM-DD
+            Date: item.date.toISOString().split("T")[0], // Format date
         }));
 
         // Create a new Excel workbook and worksheet
@@ -76,21 +113,17 @@ exports.downloadIncomeExcel = async (req, res) => {
         const ws = xlsx.utils.json_to_sheet(data);
         xlsx.utils.book_append_sheet(wb, ws, "Income");
 
-        // Define the file path
-        const filePath = "income_details.xlsx";
+        // Convert workbook to buffer
+        const excelBuffer = xlsx.write(wb, { bookType: "xlsx", type: "buffer" });
 
-        // Write the Excel file
-        xlsx.writeFile(wb, filePath);
+        // Set headers to send file directly
+        res.setHeader("Content-Disposition", "attachment; filename=income_details.xlsx");
+        res.setHeader("Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
 
-        // Send the file as a response
-        res.download(filePath, "income_details.xlsx", (err) => {
-            if (err) {
-                console.error("File download error:", err);
-                res.status(500).json({ message: "Error downloading file" });
-            }
-        });
+        // Send the Excel buffer as a response
+        res.send(excelBuffer);
     } catch (error) {
         console.error("Server error:", error);
         res.status(500).json({ message: "Server Error", error: error.message });
     }
-}
+};
