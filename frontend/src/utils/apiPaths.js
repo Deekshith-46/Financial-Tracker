@@ -1,5 +1,5 @@
-export const BASE_URL = "http://localhost:5001"; // Fixed missing closing quote
-// export const BASE_URL = "https://financial-tracker-backend-omega.vercel.app/";
+// export const BASE_URL = "http://localhost:5001"; // Fixed missing closing quote
+export const BASE_URL = "https://financial-tracker-backend-omega.vercel.app/";
 // utils/apiPaths.js
 export const API_PATHS = {
   AUTH: {
