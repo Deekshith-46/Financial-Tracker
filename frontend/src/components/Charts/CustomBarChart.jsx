@@ -19,7 +19,7 @@ const CustomBarChart = ({ data }) => {
                 <div className={`p-2 rounded-lg border shadow-md ${theme === "dark" ? "bg-gray-800 border-gray-600 text-white" : "bg-white border-gray-300 text-black"}`}>
                     <p className="text-xs font-semibold mb-1">{payload[0].payload.category}</p>
                     <p className="text-sm">
-                        Amount: <span className="font-medium">${payload[0].payload.amount}</span>
+                        Amount: <span className="font-medium">₹{payload[0].payload.amount}</span>
                     </p>
                 </div>
             );
@@ -29,7 +29,7 @@ const CustomBarChart = ({ data }) => {
 
     return (
         <div className={`mt-6 p-4 rounded-lg ${theme === "dark" ? "bg-gray-900" : "bg-white"} shadow-md`}>
-            <ResponsiveContainer width="100%" height={300}>
+            <ResponsiveContainer width="100%" height={300} >
                 <BarChart data={data}>
                     {/* X and Y Axis without grid lines */}
                     <XAxis dataKey="month" tick={{ fontSize: 12, fill: theme === "dark" ? "#ddd" : "#555" }} stroke="none" />
@@ -41,7 +41,7 @@ const CustomBarChart = ({ data }) => {
 
                     <Bar dataKey="amount" radius={[10, 10, 0, 0]}>
                         {data.map((entry, index) => (
-                            <Cell key={index} fill={getBarColor(index)} />
+                            <Cell key={index} fill={getBarColor(index)}/>
                         ))}
                     </Bar>
                 </BarChart>
@@ -51,3 +51,5 @@ const CustomBarChart = ({ data }) => {
 };
 
 export default CustomBarChart;
+
+

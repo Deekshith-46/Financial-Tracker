@@ -10,7 +10,7 @@ const CustomPieChart = ({ data, label, totalAmount, colors, showTextAnchor }) =>
 
     return (
         <ResponsiveContainer width="100%" height={380}>
-            <div className={`flex items-center justify-center mt-4 font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+            <div className={`flex items-center justify-center cursor-pointer mt-4 font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
                 {label}: {totalAmount}
             </div>
 
@@ -25,6 +25,7 @@ const CustomPieChart = ({ data, label, totalAmount, colors, showTextAnchor }) =>
                     innerRadius={100}
                     labelLine={false}
                     isAnimationActive={true}
+                    className='cursor-pointer'
                 >
                     {data.map((entry, index) => (
                         <Cell

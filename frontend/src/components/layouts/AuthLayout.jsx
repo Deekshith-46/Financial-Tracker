@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import CARD_2 from "../../assets/images/card2.png"
 import {LuTrendingUpDown} from "react-icons/lu";
 import { ThemeContext } from '../../context/ThemeContext';
-import logo from "../../assets/images/logo.png"
+import logo from "../../assets/images/logo.jpg"
 
 const AuthLayout = ({children}) => {
     const { theme } = useContext(ThemeContext);
@@ -47,7 +47,7 @@ const StatsInfoCard = ({icon, label, value, color})=>{
         </div>
         <div>
             <h6 className='text-xs text-gray-500 mb-1'>{label}</h6>
-            <span className='text-[20px]'>${value}</span>
+            <span className='text-[20px]'>₹{value}</span>
         </div>
     </div>
 }

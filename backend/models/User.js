@@ -7,7 +7,7 @@ const UserSchema = new mongoose.Schema(
     fullName: { type: String, required: true },  // User's full name (Required)
     email: { type: String, required: true, unique: true },  // Unique email (Required)
     password: { type: String, required: true },  // User password (Required)
-    profileImageUrl: { type: String, default: null }  // Optional profile image
+    profileImageUrl: { type: String, default: '' }  // Optional profile image
   },
   { timestamps: true }  // Automatically adds createdAt & updatedAt fields
 );

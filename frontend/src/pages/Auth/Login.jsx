@@ -1,5 +1,5 @@
-import React, { use, useContext, useState } from 'react'
-import AuthLayout from '../../components/layouts/AuthLayout'
+import React, { useContext, useState } from 'react';
+import AuthLayout from '../../components/layouts/AuthLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../components/Inputs/Inputs';
 import { validateEmail } from '../../utils/helper';
@@ -10,86 +10,119 @@ import { ThemeContext } from '../../context/ThemeContext';
 
 const Login = () => {
   const { theme } = useContext(ThemeContext);
-
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
-
-  const {updateUser} = useContext(UserContext);
-
+  const { updateUser } = useContext(UserContext);
   const navigate = useNavigate();
-  //Handle login submit
+
+  // Handle login submit
   const handleLogin = async (e) => {
     e.preventDefault();
     if (!validateEmail(email)) {
-      setError("Please enter a valid email address.");
+      setError('Please enter a valid email address.');
       return;
     }
     if (!password) {
-      setError("Please enter the password");
+      setError('Please enter the password');
       return;
     }
-    setError("");
+    setError('');
 
-    //Login API Call 
+    // Login API Call
     try {
-      // Send login request with email and password
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
         password,
       });
 
-      // Extract token and user data from response
       const { token, user } = response.data;
 
-      // If a token is received, store it and navigate to the dashboard
       if (token) {
-        localStorage.setItem("token", token); // Save token in local storage
+        localStorage.setItem('token', token);
         updateUser(user);
-        navigate("/dashboard"); // Redirect user to dashboard
+        navigate('/dashboard');
       }
     } catch (error) {
-      // Check if the error response has a message
       if (error.response && error.response.data.message) {
-        setError(error.response.data.message); // Show the error message from API
+        setError(error.response.data.message);
       } else {
-        setError("Something went wrong. Please try again."); // Show a general error message
+        setError('Something went wrong. Please try again.');
       }
     }
-  }
+  };
+
+  // Handle guest login
+  const handleGuestLogin = () => {
+    const guestUser = {
+      id: 'guest-id',
+      fullName: 'Guest User',
+      email: 'guest@example.com',
+      profileImageUrl: '',
+    };
+    localStorage.setItem('token', 'guest-token'); // Add a mock token for guest user
+    updateUser(guestUser);
+    navigate('/dashboard');
+  };
+
   return (
     <AuthLayout>
-      <div className='lg:w-[70%] h-3/4 md:h-full flex flex-col justify-center'>
-        <h3 className={`text-xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Welcome Back</h3>
-        <p className={`text-xs ${theme === 'dark' ? "text-slate-50" : "text-slate-700"} mt-[5px] mb-6`}>Please enter your details to log in</p>
+      <div className='w-full max-w-md mx-auto sm:max-w-lg lg:max-w-xl h-full flex flex-col justify-center px-4 sm:px-6 lg:px-8'>
+        <h3 className={`text-xl sm:text-2xl font-semibold ${theme === 'dark' ? 'text-white' : 'text-black'} text-center`}>Welcome Back</h3>
+        <p className={`text-xs sm:text-sm ${theme === 'dark' ? 'text-slate-50' : 'text-slate-700'} mt-2 mb-6 text-center`}>Please enter your details to log in</p>
 
         <form onSubmit={handleLogin}>
           <Input
             value={email}
             onChange={({ target }) => setEmail(target.value)}
-            label="Email Address"
-            placeholder="Enter your email"
-            type="text"
+            label='Email Address'
+            placeholder='Enter your email'
+            type='text'
           />
           <Input
             value={password}
             onChange={({ target }) => setPassword(target.value)}
-            label="Password"
-            placeholder="Min 8 Characters"
-            type="password"
+            label='Password'
+            placeholder='Min 8 Characters'
+            type='password'
           />
 
-          {error && <p className='text-red-500 text-xs pb-2.5'>{error}</p>}
+          {error && <p className='text-red-500 text-xs sm:text-sm pb-2.5 text-center'>{error}</p>}
 
-          <button type='submit' className='btn-primary cursor-pointer'>LOGIN</button>
+          <div className='flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3'>
+            <button
+              type='submit'
+              className={`${
+                theme === 'dark'
+                  ? 'bg-blue-600 hover:bg-blue-500'
+                  : 'bg-blue-500 hover:bg-blue-600'
+              } btn-primary font-medium py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200 flex-1`}
+            >
+              LOGIN
+            </button>
+            <button
+              type='button'
+              onClick={handleGuestLogin}
+              className={`${
+                theme === 'dark'
+                  ? 'bg-gray-600 hover:bg-gray-500'
+                  : 'bg-gray-500 hover:bg-gray-600'
+              } btn-primary font-medium py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200 flex-1`}
+            >
+              GUEST LOGIN
+            </button>
+          </div>
 
-          <p className={`text-[13px] ${theme === 'dark' ? "text-slate-50" : "text-slate-800"} mt-3`}>Don't have an account ? {""}
-            <Link className="font-medium text-primary underline" to="/signUp">SignUp</Link>
+          <p className={`text-[13px] sm:text-sm ${theme === 'dark' ? 'text-slate-50' : 'text-slate-800'} mt-4 text-center`}>
+            Don't have an account?{' '}
+            <Link className='font-medium text-blue-500 underline' to='/signUp'>
+              SignUp
+            </Link>
           </p>
         </form>
       </div>
     </AuthLayout>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

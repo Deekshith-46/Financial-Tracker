@@ -51,7 +51,7 @@ const Home = () => {
           <InfoCard
             icon={<IoMdCard/>}
             label="Total Balance"
-            value={addThousandsSeparator(dashboardData?.totalBalance || 0)}
+            value={addThousandsSeparator(`${dashboardData?.totalBalance}` || 0)}
             color="bg-primary"
           />
 

@@ -10,9 +10,13 @@ const dashboardRoutes = require("./routes/dashboardRoutes.js")
 
 const app= express();
 
+
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+
 //Middelware to handle cors
 app.use(cors({
-    origin:"https://financial-tracker-frontend-five.vercel.app" || "*",
+    origin:['http://localhost:5173',"https://financial-tracker-frontend-five.vercel.app" || "*"],
     methods:["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 })

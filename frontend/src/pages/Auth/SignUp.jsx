@@ -95,7 +95,6 @@ const SignUp = () => {
                 placeholder="Enter full name"
                 type="text"
               />
-
               <Input 
                 value={email}
                 onChange={({target})=>setEmail(target.value)}
@@ -103,7 +102,7 @@ const SignUp = () => {
                 placeholder="Enter your email"
                 type="text"
               />
-              <div className='col-span-2'>
+              <div className='col-span-1 md:col-span-2'>
                 <Input 
                   value={password}
                   onChange={({target})=>setPassword(target.value)}
