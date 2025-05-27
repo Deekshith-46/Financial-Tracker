@@ -100,7 +100,7 @@ const Login = () => {
             >
               LOGIN
             </button>
-            <button
+            {/* <button
               type='button'
               onClick={handleGuestLogin}
               className={`${
@@ -110,7 +110,7 @@ const Login = () => {
               } btn-primary font-medium py-2 px-4 rounded-lg cursor-pointer transition-colors duration-200 flex-1`}
             >
               GUEST LOGIN
-            </button>
+            </button> */}
           </div>
 
           <p className={`text-[13px] sm:text-sm ${theme === 'dark' ? 'text-slate-50' : 'text-slate-800'} mt-4 text-center`}>
